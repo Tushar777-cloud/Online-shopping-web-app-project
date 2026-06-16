@@ -91,4 +91,11 @@ class ProductController extends Controller
 
         return redirect()->route('admin.products.index')->with('success', 'Product created successfully!');
     }
+
+    public function adminIndex()
+    {
+        $products = Product::with('category')->latest()->paginate(15);
+        $categories = Category::where('is_active', true)->get();
+        return view('admin.products.index', compact('products', 'categories'));
+    }
 }

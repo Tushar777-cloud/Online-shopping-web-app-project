@@ -7,6 +7,8 @@ use App\Http\Controllers\CartController;
 use App\Http\Controllers\WishlistController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\PaymentController;
+use App\Http\Controllers\ReviewController;
+use App\Http\Controllers\AdminController;
 
 // Frontend Routes
 Route::get('/', function () {
@@ -41,6 +43,11 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/payment/esewa/failure/{order}', [PaymentController::class, 'esewaFailure'])->name('payment.esewa.failure');
 });
 
+// Review Routes
+Route::middleware(['auth'])->group(function () {
+    Route::post('/products/{product}/reviews', [ReviewController::class, 'store'])->name('reviews.store');
+});
+
 // Auth Routes
 Route::get('/login', function () {
     return view('auth.login');
@@ -61,10 +68,11 @@ Route::get('/dashboard', function () {
 
 // Admin Routes
 Route::prefix('admin')->middleware(['auth', 'role:admin'])->group(function () {
-    Route::get('/dashboard', function () {
-        return view('admin.dashboard');
-    })->name('admin.dashboard');
-
+    Route::get('/dashboard', [AdminController::class, 'dashboard'])->name('admin.dashboard');
     Route::get('/products', [ProductController::class, 'adminIndex'])->name('admin.products.index');
     Route::post('/products', [ProductController::class, 'store'])->name('admin.products.store');
+    Route::get('/orders', [AdminController::class, 'orders'])->name('admin.orders.index');
+    Route::get('/orders/{order}', [AdminController::class, 'showOrder'])->name('admin.orders.show');
+    Route::patch('/orders/{order}/status', [AdminController::class, 'updateOrderStatus'])->name('admin.orders.update-status');
+    Route::get('/customers', [AdminController::class, 'customers'])->name('admin.customers.index');
 });
