@@ -1,7 +1,10 @@
 @extends('layouts.app')
-@section('title', 'Order Details - OnlMart')
+@section('title', 'Order #' . $order->id . ' - OnlMart')
 @section('content')
-<h2 class="mb-4">Order #{{ $order->id }}</h2>
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2>Order #{{ $order->id }}</h2>
+    <a href="{{ route('orders.index') }}" class="btn btn-outline-secondary">Back to Orders</a>
+</div>
 
 <div class="row">
     <div class="col-md-8">
@@ -40,7 +43,7 @@
             <div class="card-body">
                 <div class="d-flex justify-content-between mb-2">
                     <span>Status</span>
-                    <span class="badge bg-warning">{{ ucfirst($order->status) }}</span>
+                    <span class="badge {{ $order->status_badge_class }}">{{ ucfirst($order->status) }}</span>
                 </div>
                 <div class="d-flex justify-content-between mb-2">
                     <span>Payment Method</span>
