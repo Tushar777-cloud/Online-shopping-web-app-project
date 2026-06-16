@@ -26,8 +26,22 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/cart/remove/{product}', [CartController::class, 'remove'])->name('cart.remove');
 
     Route::get('/checkout', function () {
-        return view('checkout.index');
-    })->name('checkout.index');
+        $cart = session()->get('cart', []);
+        $items = [];
+        $total = 0;
+        foreach ($cart as $productId => $quantity) {
+            $product = \App\Models\Product::find($productId);
+            if ($product) {
+                $items[] = [
+                    'product' => $product,
+                    'quantity' => $quantity,
+                    'subtotal' => $product->display_price * $quantity
+                ];
+                $total += $product->display_price * $quantity;
+            }
+        }
+        return view('checkout.index', compact('items', 'total'));
+    })->name('checkout.index'),
     Route::post('/checkout', [OrderController::class, 'store'])->name('checkout.store');
 
     Route::get('/wishlist', [WishlistController::class, 'index'])->name('wishlist.index');
