@@ -66,11 +66,19 @@ Route::get('/dashboard', function () {
     return view('dashboard.index');
 })->middleware(['auth'])->name('dashboard');
 
+Route::post('/dashboard/become-vendor', function () {
+    $user = auth()->user();
+    if ($user->isCustomer()) {
+        $user->update(['role' => 'vendor']);
+    }
+    return back()->with('success', 'You are now a vendor!');
+})->middleware(['auth'])->name('dashboard.become-vendor');
+
 // Admin Routes
 Route::prefix('admin')->group(function () {
     Route::get('/dashboard', [AdminController::class, 'dashboard'])->name('admin.dashboard')->middleware(['auth', 'role:admin']);
-    Route::get('/products', [ProductController::class, 'adminIndex'])->name('admin.products.index')->middleware(['auth', 'role:admin']);
-    Route::post('/products', [ProductController::class, 'store'])->name('admin.products.store')->middleware(['auth', 'role:admin']);
+    Route::get('/products', [ProductController::class, 'adminIndex'])->name('admin.products.index')->middleware(['auth', 'role:vendor']);
+    Route::post('/products', [ProductController::class, 'store'])->name('admin.products.store')->middleware(['auth', 'role:vendor']);
     Route::get('/orders', [AdminController::class, 'orders'])->name('admin.orders.index')->middleware(['auth', 'role:admin']);
     Route::get('/orders/{order}', [AdminController::class, 'showOrder'])->name('admin.orders.show')->middleware(['auth', 'role:admin']);
     Route::patch('/orders/{order}/status', [AdminController::class, 'updateOrderStatus'])->name('admin.orders.update-status')->middleware(['auth', 'role:admin']);
