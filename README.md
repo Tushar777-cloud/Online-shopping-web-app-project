@@ -23,8 +23,8 @@ OnlMart is a general-purpose, single-vendor e-commerce web application targeting
 
 ### 1. Clone the Repository
 ```bash
-git clone <your-repo-url>
-cd OnlMart
+git clone https://github.com/Tushar777-cloud/Online-shopping-web-app-project.git
+cd Online-shopping-web-app-project
 ```
 
 ### 2. Install Dependencies
