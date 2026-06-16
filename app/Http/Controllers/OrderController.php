@@ -40,7 +40,8 @@ class OrderController extends Controller
             ];
         }
 
-        DB::transaction(function () use ($validated, $items, $total) {
+        $order = null;
+        DB::transaction(function () use ($validated, $items, $total, &$order) {
             $order = auth()->user()->orders()->create([
                 'status' => 'pending',
                 'payment_method' => $validated['payment_method'],
@@ -53,8 +54,14 @@ class OrderController extends Controller
                 $order->items()->create($item);
             }
 
-            Session::forget('cart');
+            if ($validated['payment_method'] === 'cod') {
+                Session::forget('cart');
+            }
         });
+
+        if ($validated['payment_method'] === 'esewa') {
+            return redirect()->route('payment.esewa.request', $order);
+        }
 
         return redirect()->route('orders.index')->with('success', 'Order placed successfully!');
     }
