@@ -67,12 +67,14 @@ Route::get('/dashboard', function () {
 })->middleware(['auth'])->name('dashboard');
 
 // Admin Routes
-Route::prefix('admin')->middleware(['auth', 'role:admin'])->group(function () {
-    Route::get('/dashboard', [AdminController::class, 'dashboard'])->name('admin.dashboard');
-    Route::get('/products', [ProductController::class, 'adminIndex'])->name('admin.products.index');
-    Route::post('/products', [ProductController::class, 'store'])->name('admin.products.store');
-    Route::get('/orders', [AdminController::class, 'orders'])->name('admin.orders.index');
-    Route::get('/orders/{order}', [AdminController::class, 'showOrder'])->name('admin.orders.show');
-    Route::patch('/orders/{order}/status', [AdminController::class, 'updateOrderStatus'])->name('admin.orders.update-status');
-    Route::get('/customers', [AdminController::class, 'customers'])->name('admin.customers.index');
+Route::prefix('admin')->group(function () {
+    Route::get('/dashboard', [AdminController::class, 'dashboard'])->name('admin.dashboard')->middleware(['auth', 'role:admin']);
+    Route::get('/products', [ProductController::class, 'adminIndex'])->name('admin.products.index')->middleware(['auth', 'role:admin']);
+    Route::post('/products', [ProductController::class, 'store'])->name('admin.products.store')->middleware(['auth', 'role:admin']);
+    Route::get('/orders', [AdminController::class, 'orders'])->name('admin.orders.index')->middleware(['auth', 'role:admin']);
+    Route::get('/orders/{order}', [AdminController::class, 'showOrder'])->name('admin.orders.show')->middleware(['auth', 'role:admin']);
+    Route::patch('/orders/{order}/status', [AdminController::class, 'updateOrderStatus'])->name('admin.orders.update-status')->middleware(['auth', 'role:admin']);
+    Route::get('/customers', [AdminController::class, 'customers'])->name('admin.customers.index')->middleware(['auth', 'role:admin']);
+    Route::get('/categories', [CategoryController::class, 'index'])->name('admin.categories.index')->middleware(['auth', 'role:admin']);
+    Route::post('/categories', [CategoryController::class, 'store'])->name('admin.categories.store')->middleware(['auth', 'role:admin']);
 });
