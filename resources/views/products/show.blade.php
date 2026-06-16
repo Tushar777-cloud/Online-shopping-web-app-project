@@ -23,37 +23,34 @@
         </p>
         <p class="mb-3">{{ Str::limit($product->description, 200) }}</p>
         
-        <div class="mb-3">
+<div class="mb-3">
             <span class="badge {{ $product->is_in_stock ? 'bg-success' : 'bg-danger' }}">
                 {{ $product->is_in_stock ? 'In Stock' : 'Out of Stock' }}
             </span>
         </div>
 
-        <form method="POST" action="{{ route('cart.add', $product) }}">
-            @csrf
-            <div class="mb-3">
-                <label class="form-label">Quantity</label>
-                <input type="number" name="quantity" class="form-control" style="width: 100px;" value="1" min="1" max="{{ $product->stock }}">
+        @auth
+            <form method="POST" action="{{ route('cart.add', $product) }}" class="d-grid gap-2">
+                @csrf
+                <div class="mb-3">
+                    <label class="form-label">Quantity</label>
+                    <input type="number" name="quantity" class="form-control" style="width: 100px;" value="1" min="1" max="{{ $product->stock }}">
+                </div>
+                <button class="btn btn-primary btn-lg" {{ !$product->is_in_stock ? 'disabled' : '' }}>
+                    <i class="bi bi-cart-plus"></i> Add to Cart
+                </button>
+            </form>
+            <form method="POST" action="{{ route('wishlist.toggle', $product) }}" class="mt-2">
+                @csrf
+                <button class="btn btn-outline-danger" type="submit">
+                    <i class="bi bi-heart"></i> Add to Wishlist
+                </button>
+            </form>
+        @else
+            <div class="d-grid gap-2">
+                <a href="{{ route('login') }}" class="btn btn-primary btn-lg">Login to Buy</a>
             </div>
-            
-            @auth
-                <div class="d-grid gap-2">
-                    <button class="btn btn-primary btn-lg" {{ !$product->is_in_stock ? 'disabled' : '' }}>
-                        <i class="bi bi-cart-plus"></i> Add to Cart
-                    </button>
-                    <form method="POST" action="{{ route('wishlist.toggle', $product) }}" class="d-inline">
-                        @csrf
-                        <button class="btn btn-outline-danger" type="submit">
-                            <i class="bi bi-heart"></i> Add to Wishlist
-                        </button>
-                    </form>
-                </div>
-            @else
-                <div class="d-grid gap-2">
-                    <a href="{{ route('login') }}" class="btn btn-primary btn-lg">Login to Buy</a>
-                </div>
-            @endauth
-        </form>
+        @endauth
     </div>
 </div>
 
