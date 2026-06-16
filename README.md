@@ -45,9 +45,16 @@ C:\xampp\mysql\bin\mysql.exe -u root -p -e "CREATE DATABASE onlmart CHARACTER SE
 ```
 
 ### 4. Configure Environment
-Copy `.env.example` to `.env` (if not exists) and update database credentials:
+Copy `.env.example` to `.env` (if not exists) and update database credentials.
+
+For SQLite (development):
 ```bash
-# For MySQL (default)
+DB_CONNECTION=sqlite
+DB_DATABASE=C:\xampp\htdocs\OnlMart\database\database.sqlite
+```
+
+For MySQL:
+```bash
 DB_CONNECTION=mysql
 DB_HOST=127.0.0.1
 DB_PORT=3306

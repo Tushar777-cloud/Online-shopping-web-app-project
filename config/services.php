@@ -35,4 +35,11 @@ return [
         ],
     ],
 
+    'esewa' => [
+        'merchant_id' => env('ESEWA_MERCHANT_ID', 'EPAYTEST'),
+        'success_url' => env('ESEWA_SUCCESS_URL'),
+        'failure_url' => env('ESEWA_FAILURE_URL'),
+        'test_mode' => env('ESEWA_TEST_MODE', true),
+    ],
+
 ];
