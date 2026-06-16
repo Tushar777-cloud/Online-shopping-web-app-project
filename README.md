@@ -50,7 +50,7 @@ Copy `.env.example` to `.env` (if not exists) and update database credentials.
 For SQLite (development):
 ```bash
 DB_CONNECTION=sqlite
-DB_DATABASE=C:\xampp\htdocs\OnlMart\database\database.sqlite
+DB_DATABASE=database/database.sqlite
 ```
 
 For MySQL:
@@ -94,7 +94,7 @@ php artisan serve
 
 Or configure XAMPP Apache virtual host to point to the `public` directory.
 
-Visit: http://localhost:8000 or http://localhost/onlmart
+Visit: http://localhost:8000 or http://localhost/Online-shopping-web-app-project
 
 ## eSewa Sandbox Configuration
 
@@ -119,6 +119,11 @@ app/
 │   │   ├── AuthController.php
 │   │   ├── ProductController.php
 │   │   ├── CartController.php
+│   │   ├── WishlistController.php
+│   │   ├── OrderController.php
+│   │   ├── PaymentController.php
+│   │   ├── CategoryController.php
+│   │   ├── ReviewController.php
 │   │   └── AdminController.php
 ├── Models/
 │   ├── User.php
