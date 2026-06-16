@@ -45,7 +45,8 @@ Route::middleware(['auth'])->group(function () {
 
 // Review Routes
 Route::middleware(['auth'])->group(function () {
-    Route::post('/products/{product}/reviews', [ReviewController::class, 'store'])->name('reviews.store');
+    Route::get('/wishlist', [WishlistController::class, 'index'])->name('wishlist.index');
+    Route::post('/wishlist/toggle/{product}', [WishlistController::class, 'toggle'])->name('wishlist.toggle');
 });
 
 // Auth Routes

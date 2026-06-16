@@ -41,9 +41,12 @@
                     <button class="btn btn-primary btn-lg" {{ !$product->is_in_stock ? 'disabled' : '' }}>
                         <i class="bi bi-cart-plus"></i> Add to Cart
                     </button>
-                    <a href="{{ route('wishlist.toggle', $product) }}" class="btn btn-outline-danger">
-                        <i class="bi bi-heart"></i> Add to Wishlist
-                    </a>
+                    <form method="POST" action="{{ route('wishlist.toggle', $product) }}" class="d-inline">
+                        @csrf
+                        <button class="btn btn-outline-danger" type="submit">
+                            <i class="bi bi-heart"></i> Add to Wishlist
+                        </button>
+                    </form>
                 </div>
             @else
                 <div class="d-grid gap-2">
