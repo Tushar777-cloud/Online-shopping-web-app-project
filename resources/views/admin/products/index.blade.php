@@ -44,7 +44,16 @@
                                 </span>
                             </td>
                             <td>
-                                <a href="{{ route('products.show', $product) }}" class="btn btn-sm btn-outline-primary">View</a>
+                                <a href="{{ route('products.show', $product->slug) }}" class="btn btn-sm btn-outline-primary">View</a>
+                                <button class="btn btn-sm btn-outline-warning" data-bs-toggle="modal" data-bs-target="#editProductModal{{ $product->id }}">
+                                    <i class="bi bi-pencil"></i>
+                                </button>
+                                <form method="POST" action="{{ route('admin.products.destroy', $product) }}" class="d-inline">
+                                    @csrf @method('DELETE')
+                                    <button class="btn btn-sm btn-outline-danger" type="submit" onclick="return confirm('Are you sure?')">
+                                        <i class="bi bi-trash"></i>
+                                    </button>
+                                </form>
                             </td>
                         </tr>
                         @endforeach
@@ -105,9 +114,71 @@
                         <input type="file" name="images[]" class="form-control" multiple accept="image/*">
                     </div>
                 </div>
-                <div class="modal-footer">
-                    <button type="submit" class="btn btn-primary">Save Product</button>
+<div class="modal-footer">
+                    <button type="submit" class="btn btn-primary">Save Category</button>
                 </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Edit Product Modals -->
+@foreach($products as $product)
+<div class="modal fade" id="editProductModal{{ $product->id }}" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <form method="POST" action="{{ route('admin.products.update', $product) }}" enctype="multipart/form-data">
+                @csrf @method('PUT')
+                <div class="modal-header">
+                    <h5 class="modal-title">Edit Product: {{ $product->name }}</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Product Name</label>
+                            <input type="text" name="name" class="form-control" value="{{ $product->name }}" required>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Category</label>
+                            <select name="category_id" class="form-select" required>
+                                @foreach($categories as $category)
+                                    <option value="{{ $category->id }}" {{ $product->category_id == $category->id ? 'selected' : '' }}>{{ $category->name }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Description</label>
+                        <textarea name="description" class="form-control" rows="3">{{ $product->description }}</textarea>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Price (Rs.)</label>
+                            <input type="number" name="price" class="form-control" value="{{ $product->price }}" min="0" step="0.01" required>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Sale Price (Rs.)</label>
+                            <input type="number" name="sale_price" class="form-control" value="{{ $product->sale_price }}" min="0" step="0.01">
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Stock Quantity</label>
+                        <input type="number" name="stock" class="form-control" value="{{ $product->stock }}" min="0" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Add More Images</label>
+                        <input type="file" name="images[]" class="form-control" multiple accept="image/*">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary">Update Product</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+@endforeach
             </form>
         </div>
     </div>

@@ -94,8 +94,60 @@ class ProductController extends Controller
 
     public function adminIndex()
     {
-        $products = Product::with('category')->latest()->paginate(15);
+        $query = Product::with('category');
+        if (auth()->user()->isVendor()) {
+            $query->where('vendor_id', auth()->id());
+        }
+        $products = $query->latest()->paginate(15);
         $categories = Category::where('is_active', true)->get();
         return view('admin.products.index', compact('products', 'categories'));
+    }
+
+    public function update(Request $request, Product $product)
+    {
+        if ($product->vendor_id !== auth()->id() && !auth()->user()->isAdmin()) {
+            abort(403);
+        }
+
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            'description' => 'nullable|string',
+            'price' => 'required|numeric|min:0',
+            'sale_price' => 'nullable|numeric|min:0|lt:price',
+            'stock' => 'required|integer|min:0',
+            'category_id' => 'required|exists:categories,id',
+            'images.*' => 'image|mimes:jpeg,png,jpg,gif,webp|max:5120',
+            'is_active' => 'boolean',
+        ]);
+
+        $product->update([
+            'name' => $validated['name'],
+            'slug' => Str::slug($validated['name']),
+            'description' => $validated['description'],
+            'price' => $validated['price'],
+            'sale_price' => $validated['sale_price'] ?? null,
+            'stock' => $validated['stock'],
+            'category_id' => $validated['category_id'],
+            'is_active' => $validated['is_active'] ?? true,
+        ]);
+
+        if ($request->hasFile('images')) {
+            $images = [];
+            foreach ($request->file('images') as $image) {
+                $images[] = $image->store('products', 'public');
+            }
+            $product->update(['images' => array_merge($product->images ?? [], $images)]);
+        }
+
+        return back()->with('success', 'Product updated successfully!');
+    }
+
+    public function destroy(Product $product)
+    {
+        if ($product->vendor_id !== auth()->id() && !auth()->user()->isAdmin()) {
+            abort(403);
+        }
+        $product->delete();
+        return back()->with('success', 'Product deleted!');
     }
 }

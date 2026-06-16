@@ -46,8 +46,7 @@ Route::middleware(['auth'])->group(function () {
 
 // Review Routes
 Route::middleware(['auth'])->group(function () {
-    Route::get('/wishlist', [WishlistController::class, 'index'])->name('wishlist.index');
-    Route::post('/wishlist/toggle/{product}', [WishlistController::class, 'toggle'])->name('wishlist.toggle');
+    Route::post('/products/{product}/reviews', [ReviewController::class, 'store'])->name('reviews.store');
 });
 
 // Auth Routes
@@ -81,6 +80,8 @@ Route::prefix('admin')->group(function () {
     Route::get('/dashboard', [AdminController::class, 'dashboard'])->name('admin.dashboard')->middleware(['auth', 'role:admin']);
     Route::get('/products', [ProductController::class, 'adminIndex'])->name('admin.products.index')->middleware(['auth', 'role:vendor']);
     Route::post('/products', [ProductController::class, 'store'])->name('admin.products.store')->middleware(['auth', 'role:vendor']);
+    Route::put('/products/{product}', [ProductController::class, 'update'])->name('admin.products.update')->middleware(['auth', 'role:vendor']);
+    Route::delete('/products/{product}', [ProductController::class, 'destroy'])->name('admin.products.destroy')->middleware(['auth', 'role:vendor']);
     Route::get('/orders', [AdminController::class, 'orders'])->name('admin.orders.index')->middleware(['auth', 'role:admin']);
     Route::get('/orders/{order}', [AdminController::class, 'showOrder'])->name('admin.orders.show')->middleware(['auth', 'role:admin']);
     Route::patch('/orders/{order}/status', [AdminController::class, 'updateOrderStatus'])->name('admin.orders.update-status')->middleware(['auth', 'role:admin']);
