@@ -41,7 +41,7 @@ Route::middleware(['auth'])->group(function () {
             }
         }
         return view('checkout.index', compact('items', 'total'));
-    })->name('checkout.index'),
+    })->name('checkout.index');
     Route::post('/checkout', [OrderController::class, 'store'])->name('checkout.store');
 
     Route::get('/wishlist', [WishlistController::class, 'index'])->name('wishlist.index');
